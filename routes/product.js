@@ -19,6 +19,7 @@ router.get('/', asyncHandler(async (req, res) => {
         .populate('proVariantId', 'id name');
         res.json({ success: true, message: "Products retrieved successfully.", data: products });
     } catch (error) {
+        console.log("Error retrieving products:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 }));
