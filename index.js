@@ -4,6 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
 const dotenv = require('dotenv');
+const fs = require("fs")
 dotenv.config();
 
 const app = express();
@@ -22,6 +23,13 @@ db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to Database'));
 
 
+app.use((req,res,next)=>{
+    const date = new Date(Date.now());
+    fs.appendFile("log.txt",`\nIP: ${req.ip} |Date: ${date.toLocaleString()} | Method: ${req.method} | path: ${req.path}`,(error,data)=>{
+        next();
+    })
+})
+
 // Routes
 app.use('/categories', require('./routes/category'));
 app.use('/subCategories', require('./routes/subCategory'));
@@ -37,7 +45,6 @@ app.use('/payment', require('./routes/payment'));
 app.use('/notification', require('./routes/notification'));
 
 
-
 // Example route using asyncHandler directly in app.js
 app.get('/', asyncHandler(async (req, res) => {
     res.json({ success: true, message: 'API working successfully', data: null });
@@ -50,7 +57,7 @@ app.use((error, req, res, next) => {
 
 
 app.listen(process.env.PORT,'0.0.0.0', () => {
-    console.log(`Server running on port ${process.env.PORT}`);
+    console.log(`Server running on  http://localhost:${process.env.PORT}`);
 });
 
 

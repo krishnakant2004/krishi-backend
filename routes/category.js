@@ -51,7 +51,7 @@ router.post('/', asyncHandler(async (req, res) => {
             const { name } = req.body;
             let imageUrl = 'no_url';
             if (req.file) {
-                imageUrl = `http://172.17.64.1:3000/image/category/${req.file.filename}`;
+                imageUrl = `http://localhost:3000/image/category/${req.file.filename}`;
             }
             console.log('url ', req.file)
 

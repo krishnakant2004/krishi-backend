@@ -11,7 +11,7 @@ const client = new OneSignal.Client(process.env.ONE_SIGNAL_APP_ID, process.env.O
 
 router.post('/send-notification', asyncHandler(async (req, res) => {
     const { title, description, imageUrl } = req.body;
-
+    console.log(req.body);
     const notificationBody = {
         contents: {
             'en': description
@@ -24,6 +24,7 @@ router.post('/send-notification', asyncHandler(async (req, res) => {
     };
 
     const response = await client.createNotification(notificationBody);
+    console.log('Notification sent to all users:', response.body.id);
     const notificationId = response.body.id;
     console.log('Notification sent to all users:', notificationId);
     const notification = new Notification({ notificationId, title,description,imageUrl });
