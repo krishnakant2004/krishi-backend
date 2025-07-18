@@ -51,9 +51,13 @@ router.post('/login', async (req, res) => {
 
         // Don't send the password back to the client
         user.password = undefined;
+        const responseData = {
+             token: token,
+            ...user  // spreads user properties directly into data
+        };
 
         // Authentication successful
-        res.status(200).json({ success: true, message: "Login successful.", data: { token, user } });
+        res.status(200).json({ success: true, message: "Login successful.", data: responseData });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -151,7 +155,12 @@ router.post('/google-auth', asyncHandler(async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
         user.password = undefined; // Never send password back
 
-        res.json({ success: true, message: 'Google authentication successful.', data: { token, user } });
+        const responseData = {
+             token: token,
+            ...user  // spreads user properties directly into data
+        };
+
+        res.json({ success: true, message: 'Google authentication successful.', data: responseData });
     } catch (error) {
         console.error("Google Auth Error:", error);
         res.status(401).json({ success: false, message: "Invalid Google token or authentication failed." });
