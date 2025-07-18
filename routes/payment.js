@@ -12,7 +12,7 @@ const stripe = require('stripe')(process.env.STRIPE_SKRT_KET_TST);
 
 
 
-router.post('/stripe', asyncHandler(async (req, res) => {jnaa
+router.post('/stripe', asyncHandler(async (req, res) => {
   try {
     console.log('stripe');
     const { email, name, address, amount, currency, description } = req.body;

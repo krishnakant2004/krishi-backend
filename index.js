@@ -5,12 +5,17 @@ const mongoose = require('mongoose');
 const asyncHandler = require('express-async-handler');
 const dotenv = require('dotenv');
 const fs = require("fs")
+const passport = require('passport');
+const session = require('express-session');
 dotenv.config();
 
 const app = express();
 //?Middle wair
 app.use(cors({ origin: '*' }))
 app.use(bodyParser.json());
+
+
+
 //? setting static folder path
 app.use('/image/products', express.static('public/products'));
 app.use('/image/category', express.static('public/category'));

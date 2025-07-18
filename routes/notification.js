@@ -3,8 +3,8 @@ const router = express.Router();
 const asyncHandler = require('express-async-handler');
 const Notification = require('../model/notification');
 const OneSignal = require('onesignal-node');
-const dotenv = require('dotenv');
-dotenv.config();
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 
 const client = new OneSignal.Client(process.env.ONE_SIGNAL_APP_ID, process.env.ONE_SIGNAL_REST_API_KEY);
@@ -30,6 +30,46 @@ router.post('/send-notification', asyncHandler(async (req, res) => {
     const notification = new Notification({ notificationId, title,description,imageUrl });
     const newNotification = await notification.save();
     res.json({ success: true, message: 'Notification sent successfully', data: null });
+}));
+
+router.post('/send-email-superUser', asyncHandler(async (req, res) => {
+    const { to, subject, body, isHtml } = req.body;
+    console.log(req.body);
+
+    if (!to || !subject || !body) {
+        // return res.status(400).json({ success: false, message:  });
+        console.log("To, subject, and body are required.");
+        return;
+    }
+
+ const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.myEmail,  
+    pass: process.env.myPassword,
+  }
+});
+
+  // Mail options
+const mailOptions = {
+  from: process.env.myEmail,
+  to:to,
+  subject: subject,
+  text: body,
+  html: isHtml ? body : undefined ,
+};
+
+transporter.sendMail(mailOptions, (error, info) => {
+  if (error) {
+    console.error('Error sending email:', error);
+  } else {
+    console.log('Email sent successfully:', info.response);
+  }
+});
+
+
 }));
 
 router.get('/track-notification/:id', asyncHandler(async (req, res) => {

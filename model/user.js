@@ -5,27 +5,29 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  email: {
+    type: String,
+    unique: true,
+    trim: true,
+    sparse:true,
+    lowercase: true
+  },
+  avatar: { type: String }, // URL to profile picture from Google
+  googleId: { type: String, unique: true, sparse: true },
   BuisnessName:{
     type:String,
-    required : true,
+    unique: true,
+    sparse: true // Allows multiple null values
   },
-  password: {
+  password: { // Optional for Google Sign-In users
     type: String,
-    required: true
   },
   phoneNo:{
     type:String,
-    required: true
+    unique: true,
+    sparse: true // Allows multiple null values
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 
