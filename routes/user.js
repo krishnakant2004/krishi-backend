@@ -51,9 +51,10 @@ router.post('/login', async (req, res) => {
 
         // Don't send the password back to the client
         user.password = undefined;
+        const plainUser = user.toObject();
         const responseData = {
              token: token,
-            ...user  // spreads user properties directly into data
+            ...plainUser  // spreads user properties directly into data
         };
 
         // Authentication successful
@@ -155,9 +156,10 @@ router.post('/google-auth', asyncHandler(async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
         user.password = undefined; // Never send password back
 
+        const plainUser = user.toObject();
         const responseData = {
              token: token,
-            ...user  // spreads user properties directly into data
+            ...plainUser  // spreads user properties directly into data
         };
 
         res.json({ success: true, message: 'Google authentication successful.', data: responseData });
