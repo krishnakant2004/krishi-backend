@@ -563,3 +563,6 @@ IP: 127.0.0.1 |Date: 7/18/2025, 8:09:44 PM | Method: POST | path: /notification/
 IP: 127.0.0.1 |Date: 7/18/2025, 8:11:32 PM | Method: POST | path: /notification/send-email-superUser
 IP: 127.0.0.1 |Date: 7/18/2025, 8:12:11 PM | Method: POST | path: /notification/send-email-superUser
 IP: 127.0.0.1 |Date: 7/18/2025, 8:13:25 PM | Method: POST | path: /notification/send-email-superUser
+IP: 127.0.0.1 |Date: 7/20/2025, 4:59:22 PM | Method: GET | path: /notification//all-notification
+IP: 127.0.0.1 |Date: 7/20/2025, 5:03:45 PM | Method: GET | path: /notification/send-notification
+IP: 127.0.0.1 |Date: 7/20/2025, 5:03:49 PM | Method: POST | path: /notification/send-notification
