@@ -3,8 +3,9 @@ const asyncHandler = require('express-async-handler');
 const router = express.Router();
 const User = require('../model/user');
 const { OAuth2Client } = require('google-auth-library');
+const bcrypt = require('bcryptjs');
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
-
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Get all users
@@ -36,12 +37,9 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ success: false, message: "Account was created with Google. Please sign in with Google." });
         }
 
-        // Check if the password is correct
-        // SECURITY WARNING: You are storing passwords in plain text.
-        // In a real application, you MUST hash passwords using a library like `bcrypt`.
-        // Example: const isMatch = await bcrypt.compare(password, user.password);
-        if (user.password !== password) {
-            return res.status(401).json({ success: false, message: "Invalid password." });
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ success:false,message: 'Invalid login credentials' });
         }
 
         // Create a JWT for the user session
@@ -83,21 +81,17 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/register', asyncHandler(async (req, res) => {
     console.log("server is ready to request");
     console.log(req.body);
-    const {name, email, BuisnessName, password, phoneNo} = req.body;
-    if (!name || !password || !email) {
-        return res.status(400).json({ success: false, message: "Name, email, and password are required." });
+    const {name, BuisnessName, password, phoneNo} = req.body;
+    if (!name || !password || !phoneNo) {
+        return res.status(400).json({ success: false, message: "Name, phoneNo, and password are required." });
     }
 
-    // Check if a user with this email already exists
-    const emailExists = await User.findOne({ email });
-    if (emailExists) {
-        return res.status(400).json({ success: false, message: "A user with this email already exists." });
-    }
+    // // Check if a user with this email already exists
+    // const emailExists = await User.findOne({ email });
+    // if (emailExists) {
+    //     return res.status(400).json({ success: false, message: "A user with this email already exists." });
+    // }
 
-    // SECURITY WARNING: Passwords should be hashed before saving!
-    // const salt = await bcrypt.genSalt(10);
-    // const hashedPassword = await bcrypt.hash(password, salt);
-    // const user = new User({ name, email, password: hashedPassword, ... });
 
     // Check if the user exists with this number
     const userNumber = await User.findOne({ phoneNo:phoneNo });
@@ -114,7 +108,7 @@ router.post('/register', asyncHandler(async (req, res) => {
     }
 
     try {
-        const user = new User({ name, email, BuisnessName, password, phoneNo });
+        const user = new User({ name, BuisnessName, password, phoneNo });
         const newUser = await user.save();
         res.json({ success: true, message: "User created successfully.", data: null });
     } catch (error) {
